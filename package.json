@@ -1,0 +1,20 @@
+{
+  "name": "miletap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.18.3",
+    "express-openid-connect": "^2.17.1",
+    "node-oauth2-server": "^2.4.0",
+    "nodemailer": "^6.9.11",
+    "oauth": "^0.10.0",
+    "sequelize": "^6.37.1"
+  }
+}

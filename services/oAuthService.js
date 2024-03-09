@@ -1,0 +1,65 @@
+const {getAccountInformationByEmail} = require('../database/authenticationDatabaseLayer');
+const {accounts} = require('../models/accounts');
+const authenticationDb = require('../database/authenticationDatabaseLayer');
+
+
+function getClient(clientID, clientSecret, cbFunc) {
+    console.log("oAuthService getClient Method: ", clientID);
+    const client = {
+        clientID,
+        clientSecret,
+        grants: null,
+        redirectUris: null,
+    };
+
+    cbFunc(false, client);
+}
+
+function grantTypeAllowed(clientID, grantType, cbFunc) {
+    console.log("oAuthService grantTypeAllowed Method: ", clientID);
+
+    cbFunc(false, true);
+}
+
+async function getUser(username, password, cbFunc) {
+
+    console.log("oAuthService getUser Method: ", username);
+    let user = await getAccountInformationByEmail(username);
+    cbFunc(false, user);
+}
+
+async function saveAccessToken(accessToken, clientID, expires, user, cbFunc) {
+
+    console.log("saveAccessToken Method: ", user);
+    try {
+        await authenticationDb.saveAccessToken(accessToken, user);
+        cbFunc(false);
+
+    }
+    catch(error) {
+        cbFunc(error);
+    }
+}
+
+async function getAccessToken(bearerToken, cbFunc) {
+
+    console.log("getAccessToken method: ", bearerToken);
+
+    let userID = authenticationDb.getAccessToken(bearerToken)
+    const accessToken = {
+        user: {
+            id: userID,
+        },
+        expires: null,
+    };
+    cbFunc(userID === null, userID === null ? null : accessToken);
+
+}
+
+module.exports = {
+    getClient,
+    saveAccessToken,
+    getUser,
+    grantTypeAllowed,
+    getAccessToken,
+};
