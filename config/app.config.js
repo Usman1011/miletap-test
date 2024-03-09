@@ -1,7 +1,8 @@
 const {authenticationRoutes} = require('../routes/index');
-const {accountController} = require('../routes/index');
+const {accountRoutes} = require('../routes/index');
 const express = require('express');
 const {oauth} = require('../config/oauth.config');
+
 
 
 
@@ -10,7 +11,7 @@ function configureApplication(app) {
     app.use(express.urlencoded({ extended: true }));
 
     app.use('/authentication', authenticationRoutes);
-    app.use('/account', accountController);
+    app.use('/account',[oauth.authorise()], accountRoutes);
     app.use(oauth.errorHandler());
     
 };
