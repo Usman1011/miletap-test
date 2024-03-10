@@ -1,15 +1,19 @@
 const {accounts} = require('../models/accounts');
+const {generateSaltedHash, verifyPassword} = require('../utils/encryption-utils');
 
-const getAccountInformationByEmail = async (email)=>{
-    console.log("In getAccountInformationEmail Method", email);
-
+const getAccountInformationByEmailAndPassword = async (email, password)=>{
+    console.log("In getAccountInformationEmail Method", email, password);
+    let hashedPassword = await generateSaltedHash(password);
     let user = await accounts.findOne({
-        where: {email: email}
+        where: {
+            email,
+        }
     })
-    
-    console.log("Retrieved User: ", user?.dataValues);
-    return user?.dataValues;
-
+    let isPasswordCorrect = await verifyPassword(user.dataValues.password, password)
+    if(isPasswordCorrect)
+        return user?.dataValues;
+    else
+        throw new Error("Invalid Credentials")
 }
 
 const updateTokenByUserId = async (userId, token)=>{
@@ -43,7 +47,7 @@ const getAccessToken = async (token) => {
 }
 
 module.exports = {
-    getAccountInformationByEmail,
+    getAccountInformationByEmailAndPassword,
     updateTokenByUserId,
     saveAccessToken,
     getAccessToken

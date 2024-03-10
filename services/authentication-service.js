@@ -1,4 +1,4 @@
-const {getAccountInformationByEmail, updateTokenByUserId} = require('../database/authenticationDatabaseLayer');
+const {getAccountInformationByEmailAndPassword, updateTokenByUserId} = require('../database/authenticationDatabaseLayer');
 const {generateSaltedHash} = require('../utils/encryption-utils');
 
 async function login(userName, password, email) {
@@ -6,7 +6,7 @@ async function login(userName, password, email) {
     
     let isUserAuthenticated = false;
     try {
-        let dbUser = await getAccountInformationByEmail(email);
+        let dbUser = await getAccountInformationByEmailAndPassword(email);
         if(email === dbUser?.email)
         {
             console.log(`User with specified email ${email} found`);

@@ -1,4 +1,4 @@
-const {getAccountInformationByEmail} = require('../database/authenticationDatabaseLayer');
+const {getAccountInformationByEmailAndPassword} = require('../database/authenticationDatabaseLayer');
 const {accounts} = require('../models/accounts');
 const authenticationDb = require('../database/authenticationDatabaseLayer');
 
@@ -23,9 +23,14 @@ function grantTypeAllowed(clientID, grantType, cbFunc) {
 
 async function getUser(username, password, cbFunc) {
 
-    console.log("oAuthService getUser Method: ", username);
-    let user = await getAccountInformationByEmail(username);
-    cbFunc(false, user);
+    try {
+        console.log("oAuthService getUser Method: ", username);
+        let user = await getAccountInformationByEmailAndPassword(username, password);
+        cbFunc(false, user);
+    }
+    catch(error) {
+        cbFunc(error)
+    }
 }
 
 async function saveAccessToken(accessToken, clientID, expires, user, cbFunc) {
@@ -37,7 +42,7 @@ async function saveAccessToken(accessToken, clientID, expires, user, cbFunc) {
 
     }
     catch(error) {
-        cbFunc(error);
+        cbFunc(error, {});
     }
 }
 

@@ -1,6 +1,7 @@
 const accountDb = require('../database/accounts-db');
 const {extractUserIdandAccountInfo} = require('../utils/account-utils');
 const {sendRegistrationEmail} = require('../utils/email-utils');
+const {generateSaltedHash} = require('../utils/encryption-utils');
 
 async function createUser(account) {
     console.log("In createUser Service: ", account);
@@ -11,11 +12,14 @@ async function createUser(account) {
     };
 
     try {
-        let previouslyCreatedAccount = await accountDb.getAccountInformationByEmail(account.email);
+        let previouslyCreatedAccount = await accountDb.getAccountInformationByEmailAndPassword(account.email);
         console.log("previouslyCreatedAccount: ", previouslyCreatedAccount);
         if(previouslyCreatedAccount){
             throw new Error("an account is already registered by this email");
         }
+
+        let hashedPassword = await generateSaltedHash(account.password);
+        account.password = hashedPassword;
 
         let createdUser = await accountDb.createAccount(account);
         console.log("createdUser: ", createdUser);

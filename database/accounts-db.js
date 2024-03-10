@@ -22,8 +22,8 @@ async function createAccount(account) {
     return newUser?.dataValues;
 };
 
-const getAccountInformationByEmail = async (email)=>{
-    console.log("In getAccountInformationByEmail Method", email);
+const getAccountInformationByEmailAndPassword = async (email)=>{
+    console.log("In getAccountInformationByEmailAndPassword Method", email);
     let user = await accounts.findOne({
         where: {email: email}
     })
@@ -60,7 +60,7 @@ const updateAccountById = async (accountId, account) => {
 
 module.exports = {
     createAccount,
-    getAccountInformationByEmail,
+    getAccountInformationByEmailAndPassword,
     getAllAccountsList,
     updateAccountById
 }
