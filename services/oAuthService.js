@@ -50,15 +50,15 @@ async function getAccessToken(bearerToken, cbFunc) {
 
     console.log("getAccessToken method: ", bearerToken);
 
-    let userID = await authenticationDb.getAccessToken(bearerToken);
-    console.log("HEll: ", userID);
+    let user = await authenticationDb.getAccessToken(bearerToken);
+    console.log("user: ", user);
     const accessToken = {
         user: {
-            id: userID,
+            id: user,
         },
         expires: null,
     };
-    cbFunc(userID === null, userID === null ? null : accessToken);
+    cbFunc(user === null, user === null ? null : accessToken);
 
 }
 
